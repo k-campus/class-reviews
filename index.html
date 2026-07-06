@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Class Reviews | K-campus</title>
+<style>
+  @font-face {
+    font-family: "Objektiv";
+    src: url("assets/fonts/ObjektivMk3-Light.ttf") format("truetype");
+    font-weight: 300;
+  }
+  @font-face {
+    font-family: "Objektiv";
+    src: url("assets/fonts/ObjektivMk3-Medium.ttf") format("truetype");
+    font-weight: 500;
+  }
+  @font-face {
+    font-family: "Objektiv";
+    src: url("assets/fonts/ObjektivMk3-Bold.ttf") format("truetype");
+    font-weight: 700;
+  }
+  @font-face {
+    font-family: "Objektiv";
+    src: url("assets/fonts/ObjektivMk1-XBold.ttf") format("truetype");
+    font-weight: 800;
+  }
+  :root {
+    --accent: #00d994;
+    --accent-dark: #0a7a54;
+    --accent-tint: #e3faf1;
+    --text-primary: #1c1c1c;
+    --text-secondary: #5b5b5b;
+    --text-muted: #8a8a8a;
+    --border: #e4e4e4;
+    --surface-1: #f6f7f5;
+    --surface-2: #ffffff;
+    --radius: 10px;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: "Objektiv", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    font-weight: 300;
+    background: var(--surface-1);
+    color: var(--text-primary);
+  }
+  h1 { font-weight: 800; }
+  .btn, .card-class, .stat-card .value { font-weight: 700; }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 32px 20px 64px; }
+
+  .logo-lockup { display: flex; align-items: center; gap: 8px; margin-bottom: 18px; }
+  .logo-lockup img { height: 22px; width: auto; display: block; }
+
+  .hero {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 32px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: flex-end;
+    gap: 24px;
+  }
+  .hero-copy { flex: 1; min-width: 0; }
+  .hero-banner-art { flex-shrink: 0; width: clamp(120px, 28vw, 260px); }
+  .hero-banner-art img { width: 100%; height: auto; display: block; }
+  .hero .eyebrow { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+  .hero .eyebrow .eyebrow-link { color: var(--text-muted); text-decoration: none; }
+  .hero .eyebrow .eyebrow-link:hover { color: var(--accent-dark); text-decoration: underline; }
+  .hero h1 { font-size: 28px; font-weight: 800; margin: 0 0 10px; line-height: 1.3; }
+  .hero p { font-size: 15px; color: var(--text-secondary); margin: 0 0 20px; line-height: 1.6; }
+  .hero-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  @media (max-width: 420px) {
+    .hero { flex-direction: column; }
+    .hero-banner-art { width: 160px; }
+  }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 11px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    text-decoration: none;
+    cursor: pointer;
+    border: 1px solid var(--border);
+    background: var(--surface-2);
+    color: var(--text-primary);
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: #fff;
+  }
+  .btn-primary:hover { background: var(--accent-dark); }
+  .btn:hover { background: var(--surface-1); }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+  .stat-card {
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .stat-card .label { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+  .stat-card .value { font-size: 24px; font-weight: 700; }
+
+  .controls {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+  .controls input[type="text"], .controls select {
+    height: 40px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 0 12px;
+    font-size: 14px;
+    background: var(--surface-2);
+    color: var(--text-primary);
+  }
+  .controls input[type="text"] { flex: 1; min-width: 220px; }
+  .controls select { min-width: 170px; }
+
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .chip {
+    font-size: 12px;
+    padding: 6px 14px;
+    border-radius: 20px;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    color: var(--text-secondary);
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px;
+    margin-bottom: 20px;
+  }
+  @media (max-width: 640px) {
+    .grid { grid-template-columns: 1fr; }
+    .stats { grid-template-columns: 1fr 1fr; }
+  }
+
+  .card {
+    display: block;
+    background: var(--surface-2);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 16px 18px;
+    text-decoration: none;
+    color: inherit;
+    transition: border-color 0.15s;
+  }
+  .card:hover { border-color: var(--accent); }
+  .card-uni {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 10px;
+  }
+  .card-uni img, .card-uni .logo-fallback {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    object-fit: contain;
+    background: var(--surface-1);
+    border: 1px solid var(--border);
+    flex-shrink: 0;
+  }
+  .card-uni .logo-fallback {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--text-muted);
+  }
+  .card-uni span { font-size: 12px; color: var(--text-muted); }
+  .card-class { font-size: 15px; font-weight: 700; margin-bottom: 10px; line-height: 1.4; }
+  .card-meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 13px;
+    color: var(--text-secondary);
+  }
+  .card-meta .views { display: flex; align-items: center; gap: 4px; }
+  .card-meta .new-pill {
+    background: var(--accent);
+    color: #fff;
+    font-size: 11px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 10px;
+  }
+
+  .load-more { text-align: center; margin-bottom: 28px; }
+
+  .cta-banner {
+    background: var(--accent-tint);
+    border-radius: 14px;
+    padding: 22px 26px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+  .cta-banner .cta-copy { display: flex; align-items: center; gap: 14px; }
+  .cta-banner .cta-copy img { width: 38px; height: auto; flex-shrink: 0; }
+  .cta-banner .title { font-weight: 700; font-size: 16px; color: var(--accent-dark); margin-bottom: 4px; }
+  .cta-banner .desc { font-size: 13px; color: var(--accent-dark); }
+
+  .empty-state {
+    text-align: center;
+    padding: 40px 20px;
+    color: var(--text-muted);
+    font-size: 14px;
+    grid-column: 1 / -1;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <div class="hero">
+    <div class="hero-copy">
+      <div class="logo-lockup"><a href="https://kcampus.kr/ko?utm_medium=github" target="_blank" rel="noopener"><img src="assets/img/kcampus-logo-green.png" alt="K-campus" /></a></div>
+      <div class="eyebrow"><a class="eyebrow-link" href="https://kcampus.kr/ko/community?tab=topic&utm_medium=github" target="_blank" rel="noopener">K-campus community</a> &middot; Class reviews</div>
+      <h1>Every class review, all in one place</h1>
+      <p id="hero-sub">Loading class reviews from every university...</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="https://kcampus.kr/ko/community/list/university?utm_medium=github" target="_blank" rel="noopener">Write a class review</a>
+        <a class="btn" href="#browse">Browse reviews</a>
+      </div>
+    </div>
+    <div class="hero-banner-art"><img src="assets/img/jandi-grad-clover.png" alt="Jandi wearing a graduation cap, surrounded by clovers" /></div>
+  </div>
+
+  <div class="stats">
+    <div class="stat-card"><div class="label">Class reviews</div><div class="value" id="stat-total">-</div></div>
+    <div class="stat-card"><div class="label">Universities</div><div class="value" id="stat-unis">-</div></div>
+    <div class="stat-card"><div class="label">Total views</div><div class="value" id="stat-views">-</div></div>
+  </div>
+
+  <div id="browse"></div>
+
+  <div class="controls">
+    <input type="text" id="search" placeholder="Search by university or class name" />
+    <select id="uni-select"><option value="">All universities</option></select>
+    <select id="sort-select">
+      <option value="date">Newest</option>
+      <option value="views">Most viewed</option>
+    </select>
+  </div>
+
+  <div class="chips" id="chips"></div>
+
+  <div class="grid" id="grid"></div>
+
+  <div class="load-more">
+    <button class="btn" id="load-more-btn">Show more reviews</button>
+  </div>
+
+  <div class="cta-banner">
+    <div class="cta-copy">
+      <img src="assets/img/jandi-wave.png" alt="Jandi waving hello" />
+      <div>
+        <div class="title">Your class review could help the next student</div>
+        <div class="desc">Taking a class with no review yet? Be the first to write one.</div>
+      </div>
+    </div>
+    <a class="btn btn-primary" href="https://kcampus.kr/ko/community/list/university?utm_medium=github" target="_blank" rel="noopener">Write a class review</a>
+  </div>
+
+</div>
+
+<script>
+const REVIEWS = [{"university": "Yonsei University", "className": "Managing Emerging Markets", "title": "Course Review: Managing Emerging Markets, Yonsei, Business", "id": 4217, "views": 385, "author": "Peter'sGuardian_461", "dateDisplay": "Jul 10, 2024", "dateISO": "2024-07-10"}, {"university": "Yonsei University", "className": "Managing Global Alliance", "title": "Course Review: Managing Global Alliance, Yonsei, Business", "id": 4216, "views": 462, "author": "Peter'sGuardian_461", "dateDisplay": "Jul 10, 2024", "dateISO": "2024-07-10"}, {"university": "Yonsei University", "className": "International Management", "title": "Course Review: International Management, Yonsei, Business", "id": 4213, "views": 360, "author": "Peter'sGuardian_461", "dateDisplay": "Jul 10, 2024", "dateISO": "2024-07-10"}, {"university": "Yonsei University", "className": "United States Foreign Policy", "title": "Course Review: United States Foreign Policy", "id": 4090, "views": 346, "author": "jaeeerim", "dateDisplay": "Jun 24, 2024", "dateISO": "2024-06-24"}, {"university": "Yonsei University", "className": "Theory of Visual Culture", "title": "Course Review: Theory of visual culture", "id": 7038, "views": 1526, "author": "Andy18", "dateDisplay": "Jul 18, 2025", "dateISO": "2025-07-18"}, {"university": "Yonsei University", "className": "Global Business Negotiation & Innovation and Human Capital", "title": "Course Reviews: Global Business Negotiation and Dealmaking & Innovation and Human Capital", "id": 6997, "views": 478, "author": "Nadia", "dateDisplay": "Jul 15, 2025", "dateISO": "2025-07-15"}, {"university": "Korea University", "className": "Global Marketing (GSIS)", "title": "Course Review: Global Marketing at Korea University GSIS", "id": 4074, "views": 654, "author": "Luna", "dateDisplay": "Jun 19, 2024", "dateISO": "2024-06-19"}, {"university": "Korea University", "className": "Business English", "title": "Course Review: Business English", "id": 4084, "views": 471, "author": "Sasha", "dateDisplay": "Jun 23, 2024", "dateISO": "2024-06-23"}, {"university": "Korea University", "className": "Introduction to International Relations", "title": "Course review: Introduction to International Relations", "id": 4087, "views": 386, "author": "leetaemin0930", "dateDisplay": "Jun 23, 2024", "dateISO": "2024-06-23"}, {"university": "Korea University", "className": "Climate and Culture", "title": "Course Review: Climate and Culture", "id": 4088, "views": 491, "author": "sydptr", "dateDisplay": "Jun 24, 2024", "dateISO": "2024-06-24"}, {"university": "Korea University", "className": "Introduction to Psychology", "title": "Course Review: Introduction to Psychology", "id": 4100, "views": 325, "author": "KerimelremPicakli", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Korea University", "className": "Introduction to Korean Studies", "title": "Course Review: Introduction to Korean Studies", "id": 4096, "views": 325, "author": "MelisaDuman", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Korea University", "className": "International Nuclear Non-proliferation Regimes", "title": "Course Review: International Nuclear Non-proliferation Regimes", "id": 4094, "views": 498, "author": "Shreya Mishra", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Korea University", "className": "Understanding of Advertising", "title": "Course Review: Understanding of Advertising", "id": 4078, "views": 337, "author": "jwiahh", "dateDisplay": "Jun 21, 2024", "dateISO": "2024-06-21"}, {"university": "Korea University", "className": "Korea in the Era of Globalization", "title": "Class Review: Korea in the Era of Globalization", "id": 7016, "views": 357, "author": "Thaisabelle", "dateDisplay": "Jul 16, 2025", "dateISO": "2025-07-16"}, {"university": "Korea University", "className": "Plant Bacteriology & Lab", "title": "Why Plant Bacteriology & Lab became my favorite course at Korea University", "id": 6944, "views": 398, "author": "MillyGuardado", "dateDisplay": "Jul 5, 2025", "dateISO": "2025-07-05"}, {"university": "Seoul National University", "className": "Human Rights and Refugee Issues in International Law", "title": "A Class Review: Human Rights and Refugee Issues in International Law", "id": 6988, "views": 1181, "author": "photodiaryofema", "dateDisplay": "Jul 14, 2025", "dateISO": "2025-07-14"}, {"university": "Seoul National University", "className": "International Trade and U.S. Trade Policy", "title": "International Trade and U.S. Trade Policy at SNU: A Must Take Course", "id": 6934, "views": 1236, "author": "Lejla<33", "dateDisplay": "Jun 30, 2025", "dateISO": "2025-06-30"}, {"university": "Ewha Womans University", "className": "International Institutions and Cooperation", "title": "Course Review: International Institutions and Cooperation at Ewha", "id": 4086, "views": 360, "author": "Sampriti", "dateDisplay": "Jun 23, 2024", "dateISO": "2024-06-23"}, {"university": "Ewha Womans University", "className": "Human Communication", "title": "Course Review: Human Communication", "id": 4108, "views": 431, "author": "dalarrad", "dateDisplay": "Jun 26, 2024", "dateISO": "2024-06-26"}, {"university": "Ewha Womans University", "className": "Introduction To English Literature", "title": "Course Review: Introduction To English Literature", "id": 4091, "views": 434, "author": "Monineath", "dateDisplay": "Jun 24, 2024", "dateISO": "2024-06-24"}, {"university": "Ewha Womans University", "className": "Special Topics in English", "title": "An honest course review: Special Topics in English at Ewha Womans University", "id": 7022, "views": 567, "author": "FatinAlya", "dateDisplay": "Jul 17, 2025", "dateISO": "2025-07-17"}, {"university": "Ewha Womans University", "className": "Reading Academic Korean I", "title": "Course Review: Reading Academic Korean I (Ewha Womans University)", "id": 7008, "views": 490, "author": "waralee", "dateDisplay": "Jul 16, 2025", "dateISO": "2025-07-16"}, {"university": "Sungkyunkwan University", "className": "Contemporary Architecture 1", "title": "Course review: Contemporary Architecture 1. Sungkyunkwan University", "id": 4083, "views": 323, "author": "Tanya_Badygova", "dateDisplay": "Jun 23, 2024", "dateISO": "2024-06-23"}, {"university": "Sungkyunkwan University", "className": "Eye-Opening 교양 Class (English)", "title": "I Thought I Knew English... Until I Took This Class: The Most Eye-Opening 교양 Class at SKKU", "id": 7003, "views": 270, "author": "Claire", "dateDisplay": "Jul 16, 2025", "dateISO": "2025-07-16"}, {"university": "Sungkyunkwan University", "className": "Media Psychology", "title": "Media Psychology at SKKU: A Must-Take Course for International Students", "id": 6932, "views": 286, "author": "TsvetiPashovska", "dateDisplay": "Jun 30, 2025", "dateISO": "2025-06-30"}, {"university": "Sogang University", "className": "International Financial Markets", "title": "Course Review: International Financial Markets", "id": 4114, "views": 387, "author": "Milenkasc", "dateDisplay": "Jun 26, 2024", "dateISO": "2024-06-26"}, {"university": "Sogang University", "className": "International Business Strategy", "title": "Course Review: International Business Strategy", "id": 7031, "views": 1355, "author": "Zhanara", "dateDisplay": "Jul 17, 2025", "dateISO": "2025-07-17"}, {"university": "Sogang University", "className": "Strategic Communication Planning (COMM 6000)", "title": "COMM 6000: Strategic Communication Planning", "id": 7036, "views": 269, "author": "karina.soto333", "dateDisplay": "Jul 17, 2025", "dateISO": "2025-07-17"}, {"university": "Sogang University", "className": "Media and Communication (Starter Pack)", "title": "Course Review: Starter pack for Comm students", "id": 7028, "views": 911, "author": "tootooh", "dateDisplay": "Jul 17, 2025", "dateISO": "2025-07-17"}, {"university": "Hanyang University", "className": "Asian Business Field Project", "title": "Course Review: Asian Business Field Project at Hanyang", "id": 4085, "views": 473, "author": "salonie.sk", "dateDisplay": "Jun 23, 2024", "dateISO": "2024-06-23"}, {"university": "Hanyang University", "className": "New Venture Creation", "title": "New Venture Creation at Hanyang: A Course That Turns Ideas Into Startups", "id": 7021, "views": 280, "author": "KateinSeoul", "dateDisplay": "Jul 16, 2025", "dateISO": "2025-07-16"}, {"university": "Kyung Hee University", "className": "Introduction to Accounting", "title": "Course Review: Introduction to Accounting at Kyung Hee", "id": 4106, "views": 408, "author": "anel.batayeva", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Kyung Hee University", "className": "Tourism Event Planning", "title": "Course review: Tourism Event Planning - Kyung Hee University", "id": 4017, "views": 554, "author": "Elisansnty", "dateDisplay": "Jun 7, 2024", "dateISO": "2024-06-07"}, {"university": "Kyung Hee University", "className": "Culture and Art Management Strategy", "title": "Class review: Culture and Art Management Strategy", "id": 4022, "views": 705, "author": "Daniela", "dateDisplay": "Jun 14, 2024", "dateISO": "2024-06-14"}, {"university": "Ajou University", "className": "Business Communication", "title": "Course Review: Business Communication at AJOU University", "id": 4095, "views": 452, "author": "JyotiSihag", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Ajou University", "className": "Human Behavior & Psychology", "title": "Course Review: HUMAN BEHAVIOR & PSYCHOLOGY", "id": 4070, "views": 420, "author": "kubl1fe", "dateDisplay": "Jun 18, 2024", "dateISO": "2024-06-18"}, {"university": "Ajou University", "className": "Strategic Management", "title": "Strategic Management at Ajou University: Course Review", "id": 6992, "views": 1082, "author": "PallaviJadhav", "dateDisplay": "Jul 15, 2025", "dateISO": "2025-07-15"}, {"university": "Inha University", "className": "International Event Management", "title": "Course review: International Event Management at Inha University", "id": 4102, "views": 559, "author": "askarernist", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Chung-Ang University", "className": "Data Analysis", "title": "Data Analysis at CAU: a must taken course for International Finance or Statistics students", "id": 7000, "views": 890, "author": "Himiyo", "dateDisplay": "Jul 15, 2025", "dateISO": "2025-07-15"}, {"university": "Chung-Ang University", "className": "SW & Python", "title": "Course Review: \"SW & Python\" at Chung-Ang Uni", "id": 6963, "views": 1526, "author": "Shruti", "dateDisplay": "Jul 9, 2025", "dateISO": "2025-07-09"}, {"university": "Chungnam National University", "className": "Korean Language Study Level 3", "title": "Course Review: Korean Language Study Level 3 at Chungnam", "id": 4098, "views": 802, "author": "Duches_ann", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Kangwon National University", "className": "Internet Journalism Seminar", "title": "Course Review: Internet Journalism Seminar at Kangwon National University", "id": 4103, "views": 532, "author": "YousraFerielDrioua", "dateDisplay": "Jun 25, 2024", "dateISO": "2024-06-25"}, {"university": "Hankuk University of Foreign Studies", "className": "Korean Popular Culture and Hallyu", "title": "Course Review: Korean Popular Culture and Hallyu", "id": 7017, "views": 266, "author": "mina1511", "dateDisplay": "Jul 16, 2025", "dateISO": "2025-07-16"}, {"university": "Sungshin Women's University", "className": "Popular Culture and Cultural Studies", "title": "Grad Course Review: \"Popular Culture and Cultural Studies\" at Sungshin Women's Uni", "id": 6952, "views": 436, "author": "SuZiXuan", "dateDisplay": "Jul 7, 2025", "dateISO": "2025-07-07"}, {"university": "Woosong University", "className": "A&R Practice", "title": "Course Review: A&R Practice at Woosong University", "id": 6981, "views": 1385, "author": "lixhj", "dateDisplay": "Jul 13, 2025", "dateISO": "2025-07-13"}, {"university": "Dongguk University", "className": "Business Persuasion and Negotiation", "title": "Review of Business Persuasion and Negotiation at Dongguk University", "id": 6989, "views": 362, "author": "Sunanda7", "dateDisplay": "Jul 15, 2025", "dateISO": "2025-07-15"}, {"university": "Dongguk University", "className": "Global Korean Culture", "title": "Course Review: Global Korean Culture", "id": 6246, "views": 449, "author": "mimiraguyo", "dateDisplay": "Mar 26, 2025", "dateISO": "2025-03-26"}, {"university": "Academy of Korean Studies", "className": "Cultural Heritage in Korea", "title": "Inside the Classroom: A Review of the \"Cultural Heritage in Korea\" Course at AKS", "id": 6977, "views": 323, "author": "MohdBilal", "dateDisplay": "Jul 12, 2025", "dateISO": "2025-07-12"}, {"university": "Dongseo University", "className": "Culinary Sciences", "title": "Culinary Sciences: Class that Fed Me and My Brain", "id": 6979, "views": 358, "author": "natasyaxth", "dateDisplay": "Jul 13, 2025", "dateISO": "2025-07-13"}, {"university": "(Korean-Taught Graduate)", "className": "Korean-Taught Graduate Course", "title": "How to Get an A+ in a Korean-Taught Graduate Course Without Losing Your Mind", "id": 6990, "views": 857, "author": "LuisaQuintero", "dateDisplay": "Jul 15, 2025", "dateISO": "2025-07-15"},
+{"university": "Ajou University", "className": "Strategic Management", "author": "karina.letheia", "dateDisplay": "Jul 2, 2026", "dateISO": "2026-07-02", "communityUrl": "https://kcampus.kr/ko/community/topic/strategic-management-class-review-1712"},
+{"university": "Ajou University", "className": "Music Industry Management", "author": "karina.letheia", "dateDisplay": "Jul 2, 2026", "dateISO": "2026-07-02", "communityUrl": "https://kcampus.kr/ko/community/topic/music-industry-management-class-review-1711"},
+{"university": "Ajou University", "className": "Organizational Behavior", "author": "karina.letheia", "dateDisplay": "Jul 2, 2026", "dateISO": "2026-07-02", "communityUrl": "https://kcampus.kr/ko/community/topic/organizational-behavior-class-review-1710"}];
+
+const LOGOS = {
+  "Yonsei University": "https://uploaded.kcampus.kr/img_symbol6_41416b54df.png",
+  "Korea University": "https://uploaded.kcampus.kr/Korea_University_Global_Symbol_svg_6b4bbd6639.png_crop_23-01-15",
+  "Seoul National University": "https://uploaded.kcampus.kr/Seoul_national_university_emblem_svg_3e72109a44_97595a9537.png",
+  "Ewha Womans University": "https://uploaded.kcampus.kr/img_symbol01_69b1280948.gif_crop_23-01-16",
+  "Sungkyunkwan University": "https://uploaded.kcampus.kr/Emblem_01_ffa8f4102b.jpg",
+  "Sogang University": "https://uploaded.kcampus.kr/img14_fa5f330f44.png",
+  "Hanyang University": "https://uploaded.kcampus.kr/HYU_logo_singlecolor_png_e2c55fc947.png",
+  "Kyung Hee University": "https://uploaded.kcampus.kr/_94d3694d60.jpg",
+  "Ajou University": "https://uploaded.kcampus.kr/b1_1_02_5cd25ff3ec.png",
+  "Inha University": "https://uploaded.kcampus.kr/logo_2_2f6611286b.png",
+  "Chung-Ang University": "https://uploaded.kcampus.kr/CAU_emblem_a6454f8ca1.png",
+  "Chungnam National University": "https://uploaded.kcampus.kr/Kakao_Talk_20230216_175604775_3109784d1c.png",
+  "Kangwon National University": "https://uploaded.kcampus.kr/cts22_img9_6b1a53e5a7.png",
+  "Hankuk University of Foreign Studies": "https://uploaded.kcampus.kr/1mdpi_2302394d12.png",
+  "Sungshin Women's University": "https://uploaded.kcampus.kr/s11_62641a60dc.png",
+  "Woosong University": "https://uploaded.kcampus.kr/coper_Univ_logo17_85b0f03a78.png",
+  "Dongguk University": "https://uploaded.kcampus.kr/1_03_Authority_Logo_f9d5e3f9e9.jpg",
+  "Academy of Korean Studies": "https://uploaded.kcampus.kr/logo_1_2109a7a044.png",
+  "Dongseo University": "https://uploaded.kcampus.kr/02_98317810a1.jpg"
+};
+
+const PAGE_SIZE = 12;
+let visibleCount = PAGE_SIZE;
+let activeUni = "";
+
+function initials(name) {
+  return name.replace(/[()]/g, "").split(" ").map(w => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
+}
+
+function uniLogoHTML(uni) {
+  const src = LOGOS[uni];
+  if (src) return `<img src="${src}" alt="${uni} logo" loading="lazy" />`;
+  return `<div class="logo-fallback">${initials(uni)}</div>`;
+}
+
+function buildReviewUrl(title, id) {
+  const slug = title.trim().replace(/\s+/g, "-") + "-" + id;
+  return `https://kcampus.kr/ko/real-life-reviews/${slug}?utm_medium=github`;
+}
+
+function reviewUrl(r) {
+  if (r.communityUrl) return `${r.communityUrl}?utm_medium=github`;
+  return buildReviewUrl(r.title, r.id);
+}
+
+function renderStats() {
+  const totalViews = REVIEWS.reduce((sum, r) => sum + (r.views || 0), 0);
+  const uniCount = new Set(REVIEWS.map(r => r.university)).size;
+  document.getElementById("stat-total").textContent = REVIEWS.length;
+  document.getElementById("stat-unis").textContent = uniCount;
+  document.getElementById("stat-views").textContent = (totalViews / 1000).toFixed(1) + "k";
+  document.getElementById("hero-sub").textContent =
+    `${REVIEWS.length} class reviews from ${uniCount} universities — real accounts of classes and campus life, useful whether you're planning your next semester or still deciding where to study in Korea. Already taken the class? Share your experience.`;
+}
+
+function renderUniSelect() {
+  const counts = {};
+  REVIEWS.forEach(r => { counts[r.university] = (counts[r.university] || 0) + 1; });
+  const select = document.getElementById("uni-select");
+  Object.keys(counts).sort().forEach(uni => {
+    const opt = document.createElement("option");
+    opt.value = uni;
+    opt.textContent = `${uni} (${counts[uni]})`;
+    select.appendChild(opt);
+  });
+
+  const chipsWrap = document.getElementById("chips");
+  const topUnis = Object.entries(counts).sort((a, b) => b[1] - a[1]).slice(0, 4);
+  const allChip = document.createElement("div");
+  allChip.className = "chip active";
+  allChip.textContent = `All ${REVIEWS.length}`;
+  allChip.onclick = () => setActiveUni("", allChip);
+  chipsWrap.appendChild(allChip);
+  topUnis.forEach(([uni, count]) => {
+    const chip = document.createElement("div");
+    chip.className = "chip";
+    chip.textContent = `${uni} ${count}`;
+    chip.onclick = () => setActiveUni(uni, chip);
+    chipsWrap.appendChild(chip);
+  });
+}
+
+function setActiveUni(uni, chipEl) {
+  activeUni = uni;
+  document.getElementById("uni-select").value = uni;
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  chipEl.classList.add("active");
+  visibleCount = PAGE_SIZE;
+  render();
+}
+
+function getFiltered() {
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const uniFilter = activeUni || document.getElementById("uni-select").value;
+  const sortBy = document.getElementById("sort-select").value;
+
+  let list = REVIEWS.filter(r => {
+    const matchesQuery = !q || r.university.toLowerCase().includes(q) || r.className.toLowerCase().includes(q);
+    const matchesUni = !uniFilter || r.university === uniFilter;
+    return matchesQuery && matchesUni;
+  });
+
+  list.sort((a, b) => sortBy === "date"
+    ? new Date(b.dateISO) - new Date(a.dateISO)
+    : (b.views || 0) - (a.views || 0));
+
+  return list;
+}
+
+function render() {
+  const grid = document.getElementById("grid");
+  const filtered = getFiltered();
+  grid.innerHTML = "";
+
+  if (filtered.length === 0) {
+    grid.innerHTML = `<div class="empty-state">No class reviews match yet. Be the first to write one for this class.</div>`;
+    document.getElementById("load-more-btn").style.display = "none";
+    return;
+  }
+
+  filtered.slice(0, visibleCount).forEach(r => {
+    const card = document.createElement("a");
+    card.className = "card";
+    card.href = reviewUrl(r);
+    card.target = "_blank";
+    card.rel = "noopener";
+    const viewsHTML = r.views
+      ? `<span class="views">&#128065; ${r.views.toLocaleString()}</span>`
+      : `<span class="views new-pill">New</span>`;
+    card.innerHTML = `
+      <div class="card-uni">${uniLogoHTML(r.university)}<span>${r.university}</span></div>
+      <div class="card-class">${r.className}</div>
+      <div class="card-meta">
+        ${viewsHTML}
+        <span>${r.dateDisplay} &middot; ${r.author}</span>
+      </div>
+    `;
+    grid.appendChild(card);
+  });
+
+  const btn = document.getElementById("load-more-btn");
+  btn.style.display = filtered.length > visibleCount ? "inline-flex" : "none";
+}
+
+document.getElementById("search").addEventListener("input", () => { visibleCount = PAGE_SIZE; render(); });
+document.getElementById("uni-select").addEventListener("change", (e) => {
+  activeUni = "";
+  document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+  visibleCount = PAGE_SIZE;
+  render();
+});
+document.getElementById("sort-select").addEventListener("change", render);
+document.getElementById("load-more-btn").addEventListener("click", () => {
+  visibleCount += PAGE_SIZE;
+  render();
+});
+
+renderStats();
+renderUniSelect();
+render();
+</script>
+</body>
+</html>
